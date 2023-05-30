@@ -26,7 +26,7 @@ public class Interpreter {
         String scp = functionName;
 
         for (String cmd : function.getInstructions()) {
-            String[] splitCmd = cmd.split(" ");
+            String[] splitCmd = this.reuniteStrings(cmd.split(" "));
             String cmdName = splitCmd[0];
 
             switch (cmdName.toLowerCase()) {
@@ -57,5 +57,35 @@ public class Interpreter {
         }
 
         return curated.toArray(new String[0]);
+    }
+
+    private String[] reuniteStrings(String[] strings) {
+        ArrayList<String> reunited = new ArrayList<>();
+        ArrayList<String> buffer = new ArrayList<>();
+        boolean inString = false;
+
+        for (String string : strings) {
+            if (inString) {
+                buffer.add(string);
+                if (string.endsWith("\"")) {
+                    inString = false;
+                    String tmp = String.join(" ", buffer);
+                    tmp = tmp.substring(1, tmp.length() - 1);
+                    reunited.add(tmp);
+                    buffer.clear();
+                }
+            } else if (string.startsWith("\"")) {
+                inString = true;
+                buffer.add(string);
+            } else {
+                reunited.add(string);
+            }
+        }
+
+        if (buffer.size() > 0) {
+            System.out.println("Invalid string: " + String.join(" ", buffer));
+            return strings;
+        }
+        return reunited.toArray(new String[0]);
     }
 }
