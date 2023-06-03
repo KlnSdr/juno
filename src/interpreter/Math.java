@@ -4,10 +4,21 @@ import java.util.List;
 
 public class Math {
     public static void add(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
+        addWithFactor(cmd, scp, interpreter, 1);
+    }
+
+    public static void subtract(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
+        addWithFactor(cmd, scp, interpreter, -1);
+    }
+
+    private static void addWithFactor(List<JunoVariable> cmd, String scp, Interpreter interpreter, int factor) {
         if (cmd.get(2).getType().equals("i")) {
-            int acc = 0;
-            for (int i = 2; i < cmd.size(); i++) {
-                acc += (Integer) cmd.get(i).get();
+            int acc = (Integer) cmd.get(2).get();
+            for (int i = 3; i < cmd.size(); i++) {
+                if (cmd.get(i).getType().equals("s")) {
+                    cmd.set(i, new JunoVariable(Integer.parseInt((String) cmd.get(i).get()), "f"));
+                }
+                acc += factor * (Integer) cmd.get(i).get();
             }
 
             if (interpreter.variables.get(scp).has((String) cmd.get(1).get())) {
@@ -16,9 +27,12 @@ public class Math {
                 interpreter.variables.get(scp).add((String) cmd.get(1).get(), Integer.toString(acc), "i");
             }
         } else if (cmd.get(2).getType().equals("f")) {
-            float acc = 0.0f;
-            for (int i = 2; i < cmd.size(); i++) {
-                acc += (Float) cmd.get(i).get();
+            float acc = (Float) cmd.get(2).get();
+            for (int i = 3; i < cmd.size(); i++) {
+                if (cmd.get(i).getType().equals("s")) {
+                    cmd.set(i, new JunoVariable(Float.parseFloat((String) cmd.get(i).get()), "f"));
+                }
+                acc += factor * (Float) cmd.get(i).get();
             }
 
             if (interpreter.variables.get(scp).has((String) cmd.get(1).get())) {

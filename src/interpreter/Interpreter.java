@@ -1,6 +1,5 @@
 package interpreter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,6 +55,13 @@ public class Interpreter {
                         break;
                     }
                     Math.add(processedCmd, scp, this);
+                    break;
+                case "sub":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid add command: " + cmd);
+                        break;
+                    }
+                    Math.subtract(processedCmd, scp, this);
                     break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
