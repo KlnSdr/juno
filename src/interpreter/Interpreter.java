@@ -2,6 +2,7 @@ package interpreter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Interpreter {
     private static final String[] blacklistFunctionAndScopeNames = {"main", "global"};
@@ -26,21 +27,57 @@ public class Interpreter {
         String scp = functionName;
 
         for (String cmd : function.getInstructions()) {
-            String[] splitCmd = this.reuniteStrings(cmd.split(" "));
-            String cmdName = splitCmd[0];
+            List<JunoVariable> processedCmd = this.replaceAllVars(this.reuniteStrings(cmd.split(" ")), scp);
+            String cmdName = (String) processedCmd.get(0).get();
 
             switch (cmdName.toLowerCase()) {
                 case "set":
-                    if (splitCmd.length != 4) {
+                    if (processedCmd.size() != 4) {
                         System.out.println("Invalid set command: " + cmd);
                         break;
                     }
-                    System.out.println("Setting " + splitCmd[1] + "(" + splitCmd[2] + ")" + " to " + splitCmd[3]);
-                    variables.get(scp).add(splitCmd[1], splitCmd[3], splitCmd[2]);
+                    System.out.println("Setting " + processedCmd.get(1).get() + "(" + processedCmd.get(2).get() + ")" + " to " + processedCmd.get(3).get());
+                    variables.get(scp).add((String) processedCmd.get(1).get(), (String) processedCmd.get(3).get(), ((String) processedCmd.get(2).get()).toLowerCase());
                     break;
-                case "get":
+                case "out":
+                    processedCmd.remove(0);
+                    processedCmd.forEach((var) -> System.out.print(var.get()));
+                    System.out.println();
+                    break;
+                case "add":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid add command: " + cmd);
+                        break;
+                    }
+                    if (processedCmd.get(2).getType().equals("i")) {
+                        int acc = 0;
+                        for (int i = 2; i < processedCmd.size(); i++) {
+                            acc += (Integer) processedCmd.get(i).get();
+                        }
+
+                        if (this.variables.get(scp).has((String) processedCmd.get(1).get())) {
+                            this.variables.get(scp).set((String) processedCmd.get(1).get(), Integer.toString(acc));
+                        } else {
+                            this.variables.get(scp).add((String) processedCmd.get(1).get(), Integer.toString(acc), "i");
+                        }
+                    } else if (processedCmd.get(2).getType().equals("f")) {
+                        float acc = 0.0f;
+                        for (int i = 2; i < processedCmd.size(); i++) {
+                            acc += (Float) processedCmd.get(i).get();
+                        }
+
+                        if (this.variables.get(scp).has((String) processedCmd.get(1).get())) {
+                            this.variables.get(scp).set((String) processedCmd.get(1).get(), Float.toString(acc));
+                        } else {
+                            this.variables.get(scp).add((String) processedCmd.get(1).get(), Float.toString(acc), "f");
+                        }
+                    } else {
+                        System.out.println("Invalid type for add command: " + processedCmd.get(1).getType() + ". Expected i or f.");
+                        break;
+                    }
                     break;
                 default:
+                    System.out.println("Unknown command: " + cmdName);
                     break;
             }
         }
@@ -57,6 +94,53 @@ public class Interpreter {
         }
 
         return curated.toArray(new String[0]);
+    }
+
+    private List<JunoVariable> replaceAllVars(String[] strings, String currentScope) {
+        List<JunoVariable> output = new ArrayList<>();
+        for (String string : strings) {
+            output.addAll(this.replaceVars(string, currentScope));
+        }
+        return output;
+    }
+
+    private List<JunoVariable> replaceVars(String cmdPart, String currentScope) {
+        String[] indicator = {"&", "\\*"};
+        String[] scopes = {currentScope, "global"};
+        List<JunoVariable> input = new ArrayList<>();
+        input.add(new JunoVariable(cmdPart, "s"));
+
+        List<JunoVariable> output = new ArrayList<>();
+
+        for (int i = 0; i < indicator.length; i++) {
+            for (JunoVariable var : input) {
+                if (!var.getType().equals("s")) {
+                    output.add(var);
+                    continue;
+                }
+                String[] splitted = ((String) var.get()).split(indicator[i]);
+                boolean isNextVar = false;
+                for (String part : splitted) {
+                    if (isNextVar) {
+                        isNextVar = false;
+
+                        if (!this.variables.get(scopes[i]).has(part)) {
+                            output.add(new JunoVariable(indicator[i] + part, "s"));
+                            continue;
+                        }
+
+                        output.add(this.variables.get(scopes[i]).getRaw(part));
+                    } else if (!isNextVar && part.equals("")) {
+                        isNextVar = true;
+                    } else {
+                        output.add(new JunoVariable(part, "s"));
+                    }
+                }
+            }
+            input = output;
+            output = new ArrayList<>();
+        }
+        return input;
     }
 
     private String[] reuniteStrings(String[] strings) {

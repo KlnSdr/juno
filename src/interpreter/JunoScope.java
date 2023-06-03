@@ -45,6 +45,10 @@ public class JunoScope {
         }
     }
 
+    public JunoVariable getRaw(String name) {
+        return variables.get(name);
+    }
+
     public String getString(String name) {
         return (String) variables.get(name).get();
     }
