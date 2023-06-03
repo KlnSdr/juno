@@ -36,8 +36,14 @@ public class Interpreter {
                         System.out.println("Invalid set command: " + cmd);
                         break;
                     }
+                    String saveScp = scp;
+                    if (((String) processedCmd.get(1).get()).startsWith("_")) {
+                        processedCmd.get(1).update(((String) processedCmd.get(1).get()).substring(1));
+                        saveScp = "global";
+                    }
+
                     System.out.println("Setting " + processedCmd.get(1).get() + "(" + processedCmd.get(2).get() + ")" + " to " + processedCmd.get(3).get());
-                    variables.get(scp).add((String) processedCmd.get(1).get(), (String) processedCmd.get(3).get(), ((String) processedCmd.get(2).get()).toLowerCase());
+                    variables.get(saveScp).add((String) processedCmd.get(1).get(), (String) processedCmd.get(3).get(), ((String) processedCmd.get(2).get()).toLowerCase());
                     break;
                 case "out":
                     processedCmd.remove(0);
