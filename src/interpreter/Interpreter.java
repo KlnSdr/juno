@@ -63,6 +63,16 @@ public class Interpreter {
                     }
                     Math.subtract(processedCmd, scp, this);
                     break;
+                case "scp":
+                    if (processedCmd.size() != 2) {
+                        System.out.println("Invalid scp command: " + cmd);
+                        break;
+                    }
+                    scp = (String) processedCmd.get(1).get();
+                    if (!this.variables.containsKey(scp)) {
+                        this.variables.put(scp, new JunoScope());
+                    }
+                    break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
