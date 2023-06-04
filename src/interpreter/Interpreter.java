@@ -99,6 +99,27 @@ public class Interpreter {
                     }
                     variables.get(scpToPrg).remove(varToDelete);
                     break;
+                case "mir":
+                    if (processedCmd.size() != 3) {
+                        System.out.println("Invalid mir command: " + cmd);
+                        break;
+                    }
+                    String targetName = (String) processedCmd.get(1).get();
+                    String sourceName = (String) processedCmd.get(2).get();
+                    JunoVariable sourceVar = variables.get(scp).getRaw(sourceName);
+                    if (sourceVar == null) {
+                        System.out.println("Variable " + sourceName + " does not exist.");
+                        break;
+                    }
+                    String scpToMir = scp;
+
+                    if (targetName.startsWith("_")) {
+                        targetName = targetName.substring(1);
+                        scpToMir = "global";
+                    }
+
+                    this.variables.get(scpToMir).add(targetName, sourceVar.get().toString(), sourceVar.getType());
+                    break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
