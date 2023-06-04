@@ -87,9 +87,13 @@ public class Util {
             }
         }
 
-        if (buffer.size() > 0) {
-            System.out.println("Invalid string: " + String.join(" ", buffer));
-            return strings;
+        if (buffer.size() > 0 && buffer.get(buffer.size() - 1).endsWith("\"")) {
+            String tmp = String.join(" ", buffer);
+            tmp = tmp.substring(1, tmp.length() - 1);
+            reunited.add(tmp);
+            buffer.clear();
+        } else if (buffer.size() > 0) {
+            reunited.addAll(buffer);
         }
         return reunited.toArray(new String[0]);
     }

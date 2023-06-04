@@ -120,6 +120,25 @@ public class Interpreter {
 
                     this.variables.get(scpToMir).add(targetName, sourceVar.get().toString(), sourceVar.getType());
                     break;
+                case "con":
+                    if (processedCmd.size() < 3) {
+                        System.out.println("Invalid con command: " + cmd);
+                        break;
+                    }
+
+                    String targetVar = (String) processedCmd.get(1).get();
+                    String scpToCon = scp;
+                    String acc = "";
+                    if (targetVar.startsWith("_")) {
+                        targetVar = targetVar.substring(1);
+                        scpToCon = "global";
+                    }
+
+                    for (int i = 2; i < processedCmd.size(); i++) {
+                        acc += processedCmd.get(i).get().toString();
+                    }
+                    this.variables.get(scpToCon).add(targetVar, acc, "s");
+                    break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
