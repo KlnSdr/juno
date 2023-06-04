@@ -64,4 +64,8 @@ public class JunoScope {
     public boolean has(String name) {
         return variables.containsKey(name);
     }
+
+    public void remove(String name) {
+        variables.remove(name);
+    }
 }

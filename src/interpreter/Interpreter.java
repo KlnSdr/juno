@@ -86,6 +86,19 @@ public class Interpreter {
 
                     this.variables.remove(scpToDelete);
                     break;
+                case "prg":
+                    if (processedCmd.size() != 2) {
+                        System.out.println("Invalid prg command: " + cmd);
+                        break;
+                    }
+                    String varToDelete = (String) processedCmd.get(1).get();
+                    String scpToPrg = scp;
+                    if (varToDelete.startsWith("_")) {
+                        varToDelete = varToDelete.substring(1);
+                        scpToPrg = "global";
+                    }
+                    variables.get(scpToPrg).remove(varToDelete);
+                    break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
