@@ -73,6 +73,19 @@ public class Interpreter {
                         this.variables.put(scp, new JunoScope());
                     }
                     break;
+                case "dscp":
+                    if (processedCmd.size() != 2) {
+                        System.out.println("Invalid dscp command: " + cmd);
+                        break;
+                    }
+                    String scpToDelete = (String) processedCmd.get(1).get();
+                    if (scpToDelete.equals("global")) {
+                        System.out.println("Cannot delete global scope.");
+                        break;
+                    }
+
+                    this.variables.remove(scpToDelete);
+                    break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
