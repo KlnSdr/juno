@@ -1,5 +1,7 @@
 package interpreter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,12 +9,15 @@ public class Interpreter {
     public static final String[] blacklistFunctionAndScopeNames = {"main", "global"};
     public final HashMap<String, JunoFunction> functions = new HashMap<>();
     public final HashMap<String, JunoScope> variables = new HashMap<>();
+    private InterpreterMode mode = InterpreterMode.NORMAL;
+    private String scp;
 
     public void run(String[] program) {
         functions.put("main", new JunoFunction(new String[0], Util.curateInstructions(program)));
         variables.put("main", new JunoScope());
 
         variables.put("global", new JunoScope());
+        scp = "main";
         this.runFunction("main");
     }
 
@@ -22,12 +27,60 @@ public class Interpreter {
             return;
         }
 
+        ArrayList<String> instructionBuffer = new ArrayList<>();
+        ArrayList<String> paramBuffer = new ArrayList<>();
+        String bufferFunctionName = "";
+
         JunoFunction function = functions.get(functionName);
-        String scp = functionName;
 
         for (String cmd : function.getInstructions()) {
+            if (mode == InterpreterMode.FUNCTION) {
+                if (cmd.equalsIgnoreCase("dn")) {
+                    if (Arrays.stream(Interpreter.blacklistFunctionAndScopeNames).noneMatch(bufferFunctionName::equalsIgnoreCase)) {
+                        this.functions.put(bufferFunctionName, new JunoFunction(paramBuffer.toArray(new String[0]), instructionBuffer.toArray(new String[0])));
+                    } else {
+                        System.out.println("Function " + bufferFunctionName + " is a reserved function name.");
+                    }
+                    mode = InterpreterMode.NORMAL;
+                    instructionBuffer.clear();
+                    paramBuffer.clear();
+                    bufferFunctionName = "";
+                    continue;
+                }
+                instructionBuffer.add(cmd);
+                continue;
+            }
+
             List<JunoVariable> processedCmd = Util.replaceAllVars(Util.reuniteStrings(cmd.split(" ")), scp, this);
             String cmdName = (String) processedCmd.get(0).get();
+
+            if (cmdName.startsWith("!")) {
+                cmdName = cmdName.substring(1);
+                if (!this.functions.containsKey(cmdName)) {
+                    System.out.println("Function " + cmdName + " does not exist.");
+                    continue;
+                }
+
+                if (!this.variables.containsKey(cmdName)) {
+                    this.variables.put(cmdName, new JunoScope());
+                }
+                String oldScp = scp;
+                scp = cmdName;
+                String[] params = this.functions.get(cmdName).getParams();
+                if (processedCmd.size() - 1 != params.length) {
+                    System.out.println("Invalid number of parameters for function " + cmdName + ". Expected " + params.length + ", got " + (processedCmd.size() - 2) + ".");
+                    continue;
+                }
+                for (int i = 0; i < params.length; i++) {
+                    String varName = params[i].substring(0, params[i].lastIndexOf(":"));
+                    JunoTuple<JunoVariable, String> var = Util.convertParamToType(params[i], processedCmd.get(i + 1));
+                    this.variables.get(cmdName).add(varName, var._1().get().toString(), var._2());
+                }
+                this.variables.get(cmdName).add("callScope", oldScp, "s");
+                this.runFunction(cmdName);
+                scp = oldScp;
+                continue;
+            }
 
             switch (cmdName.toLowerCase()) {
                 case "set":
@@ -138,6 +191,20 @@ public class Interpreter {
                         acc += processedCmd.get(i).get().toString();
                     }
                     this.variables.get(scpToCon).add(targetVar, acc, "s");
+                    break;
+                case "dec":
+                    if (processedCmd.size() < 2) {
+                        System.out.println("Invalid dec command: " + cmd);
+                        break;
+                    }
+                    this.mode = InterpreterMode.FUNCTION;
+                    bufferFunctionName = processedCmd.get(1).get().toString();
+
+                    if (processedCmd.size() > 3 && processedCmd.get(2).get().toString().equals(">")) {
+                        for (int i = 3; i < processedCmd.size(); i++) {
+                            paramBuffer.add(processedCmd.get(i).get().toString());
+                        }
+                    }
                     break;
                 default:
                     System.out.println("Unknown command: " + cmdName);

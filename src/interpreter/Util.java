@@ -97,4 +97,23 @@ public class Util {
         }
         return reunited.toArray(new String[0]);
     }
+
+    public static JunoTuple<JunoVariable, String> convertParamToType(String rawParam, JunoVariable argument) {
+        String[] splitParam = rawParam.split(":");
+        if (splitParam.length < 2) {
+            System.out.println("could not extract type info from param: " + rawParam);
+            return new JunoTuple<>(argument, "s");
+        }
+        switch (splitParam[splitParam.length - 1]) {
+            case "i":
+                return new JunoTuple<>(new JunoVariable<>(Integer.parseInt(argument.get().toString()), "i"), "i");
+            case "s":
+                return new JunoTuple<>(argument, "s");
+            case "f":
+                return new JunoTuple<>(new JunoVariable<>(Float.parseFloat(argument.get().toString()), "f"), "f");
+            default:
+                System.out.println("unknown type: " + argument.getType() + " for variable " + rawParam);
+                return new JunoTuple<>(argument, "s");
+        }
+    }
 }
