@@ -206,6 +206,8 @@ public class Interpreter {
                         }
                     }
                     break;
+                case "end":
+                    return;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
