@@ -9,8 +9,15 @@ public class Interpreter {
     public static final String[] blacklistFunctionAndScopeNames = {"main", "global"};
     public final HashMap<String, JunoFunction> functions = new HashMap<>();
     public final HashMap<String, JunoScope> variables = new HashMap<>();
+    private final int maxCalls;
+    private int calls = 0;
+    private boolean isUnsafe = false;
     private InterpreterMode mode = InterpreterMode.NORMAL;
     private String scp;
+
+    public Interpreter() {
+        maxCalls = 100_000;
+    }
 
     public void run(String[] program) {
         functions.put("main", new JunoFunction(new String[0], Util.curateInstructions(program)));
@@ -208,10 +215,21 @@ public class Interpreter {
                     break;
                 case "end":
                     return;
+                case "unsafe":
+                    isUnsafe = true;
+                    break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
                     break;
             }
+            if (!isUnsafe) {
+                this.calls++;
+            }
+            if (this.calls > this.maxCalls) {
+                System.out.println("Program exceeded maximum number of calls (" + this.maxCalls + ").");
+                return;
+            }
         }
+        System.out.println(this.calls);
     }
 }
