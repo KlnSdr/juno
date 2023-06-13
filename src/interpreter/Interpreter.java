@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Interpreter {
-    public static final String[] blacklistFunctionAndScopeNames = {"main", "global"};
+    public static final String[] blacklistFunctionAndScopeNames = {"main", "global", "loop"};
     public final HashMap<String, JunoFunction> functions = new HashMap<>();
     public final HashMap<String, JunoScope> variables = new HashMap<>();
     private final int maxCalls;
@@ -55,6 +55,11 @@ public class Interpreter {
                     continue;
                 }
                 instructionBuffer.add(cmd);
+                continue;
+            } else if (mode == InterpreterMode.IGNORE_IF) {
+                if (cmd.equalsIgnoreCase("fi")) {
+                    mode = InterpreterMode.NORMAL;
+                }
                 continue;
             }
 
@@ -217,6 +222,48 @@ public class Interpreter {
                     return;
                 case "unsafe":
                     isUnsafe = true;
+                    break;
+                case "if":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid if command: " + cmd);
+                        break;
+                    }
+                    // info: all values are treated as floats "for now" (tm)
+                    Float val1 = Float.parseFloat(processedCmd.get(1).get().toString());
+                    Float val2 = Float.parseFloat(processedCmd.get(3).get().toString());
+                    String op = processedCmd.get(2).get().toString();
+                    boolean result = false;
+                    ArrayList<Boolean> results = new ArrayList<>();
+                    boolean invertResult = false;
+
+                    for (String operationSymbol : op.split("")) {
+                        switch (operationSymbol) {
+                            case "=":
+                                results.add(val1.equals(val2));
+                                break;
+                            case ">":
+                                results.add(val1 > val2);
+                                break;
+                            case "<":
+                                results.add(val1 < val2);
+                                break;
+                            case "!":
+                                invertResult = true;
+                                break;
+                            default:
+                                System.out.println("Unknown operation symbol: " + operationSymbol);
+                                break;
+                        }
+                    }
+
+                    result = results.contains(true);
+                    result = invertResult ^ result; // same as invertResult != result, but i just WANT to use the XOR operator, sorry not sorry
+                    if (!result) {
+                        this.mode = InterpreterMode.IGNORE_IF;
+                    }
+                    break;
+                case "fi":
+                    // just so there is no "Unknown command" written to the console
                     break;
                 default:
                     System.out.println("Unknown command: " + cmdName);

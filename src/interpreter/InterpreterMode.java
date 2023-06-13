@@ -1,5 +1,5 @@
 package interpreter;
 
 public enum InterpreterMode {
-    NORMAL, FUNCTION
+    NORMAL, FUNCTION, IGNORE_IF
 }

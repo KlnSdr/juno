@@ -52,7 +52,11 @@ public class Main {
                 "   # todo multiply with -1",
                 "   out \"In \" &age \" years you will be 18 years old.\"",
                 "dn",
-                "!sayHello \"John Doe\" 12"});
+                "!sayHello \"John Doe\" 12",
+                "if 1 !<= 2",
+                "   out \"1 <= 2\"",
+                "fi",
+                "out \"this is the end my only friend the end\""});
         System.out.println("Program finished.");
     }
 }
