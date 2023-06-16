@@ -89,6 +89,38 @@ public class Math {
         }
     }
 
+    public static void shiftLeft(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
+        if (cmd.get(2).getType().equals("i")) {
+            int acc = (Integer) cmd.get(2).get();
+            for (int i = 3; i < cmd.size(); i++) {
+                if (cmd.get(i).getType().equals("s")) {
+                    cmd.set(i, new JunoVariable(Integer.parseInt((String) cmd.get(i).get()), "i"));
+                }
+                acc <<= (Integer) cmd.get(i).get();
+            }
+
+            saveResultToVar(cmd, scp, interpreter, Integer.toString(acc), "i");
+        } else {
+            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i.");
+        }
+    }
+
+    public static void shiftRight(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
+        if (cmd.get(2).getType().equals("i")) {
+            int acc = (Integer) cmd.get(2).get();
+            for (int i = 3; i < cmd.size(); i++) {
+                if (cmd.get(i).getType().equals("s")) {
+                    cmd.set(i, new JunoVariable(Integer.parseInt((String) cmd.get(i).get()), "i"));
+                }
+                acc >>= (Integer) cmd.get(i).get();
+            }
+
+            saveResultToVar(cmd, scp, interpreter, Integer.toString(acc), "i");
+        } else {
+            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i.");
+        }
+    }
+
     private static void saveResultToVar(List<JunoVariable> cmd, String scp, Interpreter interpreter, String value, String type) {
         if (interpreter.variables.get(scp).has((String) cmd.get(1).get())) {
             interpreter.variables.get(scp).set((String) cmd.get(1).get(), value);

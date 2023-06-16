@@ -170,6 +170,20 @@ public class Interpreter {
                     }
                     Math.modulo(processedCmd, scp, this);
                     break;
+                case "shl":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid shl command: " + cmd);
+                        break;
+                    }
+                    Math.shiftLeft(processedCmd, scp, this);
+                    break;
+                case "shr":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid shr command: " + cmd);
+                        break;
+                    }
+                    Math.shiftRight(processedCmd, scp, this);
+                    break;
                 case "scp":
                     if (processedCmd.size() != 2) {
                         System.out.println("Invalid scp command: " + cmd);

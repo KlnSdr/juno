@@ -24,3 +24,13 @@ div a &a 3
 out &a # -4
 mod a &a 2
 out &a # 0
+
+set b i 2
+shl b &b 1
+out &b # 4
+shl b &b 2
+out &b # 16
+
+set c i 16
+shr c &c 2
+out &c # 4
