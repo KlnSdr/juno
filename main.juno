@@ -16,3 +16,11 @@ loop
 pool
 
 !test
+
+set a i 3
+mlt a &a 2 -2
+out &a # -12
+div a &a 3
+out &a # -4
+mod a &a 2
+out &a # 0

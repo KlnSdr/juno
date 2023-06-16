@@ -149,6 +149,27 @@ public class Interpreter {
                     }
                     Math.subtract(processedCmd, scp, this);
                     break;
+                case "mlt":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid mlt command: " + cmd);
+                        break;
+                    }
+                    Math.multiply(processedCmd, scp, this);
+                    break;
+                case "div":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid div command: " + cmd);
+                        break;
+                    }
+                    Math.divide(processedCmd, scp, this);
+                    break;
+                case "mod":
+                    if (processedCmd.size() < 4) {
+                        System.out.println("Invalid mod command: " + cmd);
+                        break;
+                    }
+                    Math.modulo(processedCmd, scp, this);
+                    break;
                 case "scp":
                     if (processedCmd.size() != 2) {
                         System.out.println("Invalid scp command: " + cmd);
