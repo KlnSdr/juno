@@ -32,6 +32,10 @@ public class Interpreter {
         this.runFunction("main");
     }
 
+    public void runFile(String path) {
+        run(Util.readFile(path));
+    }
+
     private void runFunction(String functionName) {
         if (!functions.containsKey(functionName)) {
             System.out.println("Function " + functionName + " does not exist.");
@@ -290,6 +294,14 @@ public class Interpreter {
                     prevMode = this.mode;
                     this.mode = InterpreterMode.RECORD_LOOP;
                     instructionBuffer = new ArrayList<>();
+                    break;
+                case "ld":
+                    if (processedCmd.size() < 2) {
+                        System.out.println("Invalid ld command: " + cmd);
+                        break;
+                    }
+                    String fileName = processedCmd.get(1).get().toString();
+                    runFile(fileName);
                     break;
                 default:
                     System.out.println("Unknown command: " + cmdName);

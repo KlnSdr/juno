@@ -1,0 +1,18 @@
+ld lib.juno
+
+dec sayHello > name:s
+    out "Hello, " &name
+dn
+
+!sayHello "World"
+
+set i i 0
+loop
+    out &i
+    add i &i 1
+    if &i > 10
+        break
+    fi
+pool
+
+!test

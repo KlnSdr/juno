@@ -1,0 +1,3 @@
+dec test
+    out "lib called successfully"
+dn

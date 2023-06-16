@@ -1,5 +1,7 @@
 package interpreter;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,5 +117,18 @@ public class Util {
                 System.out.println("unknown type: " + argument.getType() + " for variable " + rawParam);
                 return new JunoTuple<>(argument, "s");
         }
+    }
+
+    public static String[] readFile(String path) {
+        ArrayList<String> output = new ArrayList<>();
+        try (BufferedReader buffer = new BufferedReader(new FileReader(path))) {
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                output.add(line);
+            }
+        } catch (Exception e) {
+            System.out.println("could not read file: " + path);
+        }
+        return output.toArray(new String[0]);
     }
 }
