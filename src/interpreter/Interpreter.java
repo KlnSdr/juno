@@ -19,6 +19,10 @@ public class Interpreter {
         maxCalls = 100_000;
     }
 
+    public Interpreter(int maxCalls) {
+        this.maxCalls = maxCalls;
+    }
+
     public void run(String[] program) {
         functions.put("main", new JunoFunction(new String[0], Util.curateInstructions(program)));
         variables.put("main", new JunoScope());
@@ -37,6 +41,7 @@ public class Interpreter {
         ArrayList<String> instructionBuffer = new ArrayList<>();
         ArrayList<String> paramBuffer = new ArrayList<>();
         String bufferFunctionName = "";
+        InterpreterMode prevMode = mode;
 
         JunoFunction function = functions.get(functionName);
 
@@ -58,8 +63,20 @@ public class Interpreter {
                 continue;
             } else if (mode == InterpreterMode.IGNORE_IF) {
                 if (cmd.equalsIgnoreCase("fi")) {
-                    mode = InterpreterMode.NORMAL;
+                    mode = prevMode;
                 }
+                continue;
+            } else if (mode == InterpreterMode.RECORD_LOOP) {
+                if (cmd.equalsIgnoreCase("pool")) {
+                    this.functions.put("loop", new JunoFunction(new String[0], instructionBuffer.toArray(new String[0])));
+                    this.mode = InterpreterMode.LOOP;
+                    while (this.mode == InterpreterMode.LOOP && this.calls <= this.maxCalls) {
+                        runFunction("loop");
+                    }
+                    this.functions.remove("loop");
+                    continue;
+                }
+                instructionBuffer.add(cmd);
                 continue;
             }
 
@@ -259,11 +276,20 @@ public class Interpreter {
                     result = results.contains(true);
                     result = invertResult ^ result; // same as invertResult != result, but i just WANT to use the XOR operator, sorry not sorry
                     if (!result) {
+                        prevMode = this.mode;
                         this.mode = InterpreterMode.IGNORE_IF;
                     }
                     break;
                 case "fi":
                     // just so there is no "Unknown command" written to the console
+                    break;
+                case "break":
+                    this.mode = InterpreterMode.NORMAL;
+                    break;
+                case "loop":
+                    prevMode = this.mode;
+                    this.mode = InterpreterMode.RECORD_LOOP;
+                    instructionBuffer = new ArrayList<>();
                     break;
                 default:
                     System.out.println("Unknown command: " + cmdName);
@@ -277,6 +303,6 @@ public class Interpreter {
                 return;
             }
         }
-        System.out.println(this.calls);
+        // System.out.println(this.calls);
     }
 }

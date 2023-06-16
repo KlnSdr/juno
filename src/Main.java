@@ -56,7 +56,15 @@ public class Main {
                 "if 1 !<= 2",
                 "   out \"1 <= 2\"",
                 "fi",
-                "out \"this is the end my only friend the end\""});
+                "out \"this is the end my only friend the end\"",
+                "set i i 0",
+                "loop",
+                "   out &i",
+                "   add i &i 1",
+                "   if &i > 5",
+                "       break",
+                "   fi",
+                "pool"});
         System.out.println("Program finished.");
     }
 }
