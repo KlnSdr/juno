@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="juno:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/juno_jar</output-path>
+    <root id="archive" name="juno.jar">
+      <element id="module-output" name="juno" />
+    </root>
+  </artifact>
+</component>
