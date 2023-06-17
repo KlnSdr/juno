@@ -1,5 +1,3 @@
-ld std.juno
-
 dec cp > name:s newScope:s newName:s
     mir _cpName name
     mir _cpNewScope newScope
@@ -10,6 +8,12 @@ dec cp > name:s newScope:s newName:s
 
     scp *cpNewScope
     mir *cpNewName _cpTmpVar
+
+    prg _cpName
+    prg _cpNewScope
+    prg _cpNewName
+    prg _cpTmpVar
+    dscp cp
 dn
 
 dec isdef > var_name:s var_save:s
@@ -25,4 +29,8 @@ dec isdef > var_name:s var_save:s
         set &var_save s true
     fi
     !cp &var_save &callScope &var_save
+
+    prg _var_name
+    prg _var
+    dscp isdef
 dn
