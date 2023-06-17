@@ -10,6 +10,7 @@ public class Interpreter {
     public final HashMap<String, JunoFunction> functions = new HashMap<>();
     public final HashMap<String, JunoScope> variables = new HashMap<>();
     private final int maxCalls;
+    private final ArrayList<String> loadedFiles = new ArrayList<>();
     private int calls = 0;
     private boolean isUnsafe = false;
     private InterpreterMode mode = InterpreterMode.NORMAL;
@@ -33,6 +34,11 @@ public class Interpreter {
     }
 
     public void runFile(String path) {
+        if (loadedFiles.contains(path)) {
+            System.out.println("File " + path + " has already been loaded.");
+            return;
+        }
+        loadedFiles.add(path);
         run(Util.readFile(path));
     }
 
@@ -227,7 +233,14 @@ public class Interpreter {
                     }
                     String targetName = (String) processedCmd.get(1).get();
                     String sourceName = (String) processedCmd.get(2).get();
-                    JunoVariable sourceVar = variables.get(scp).getRaw(sourceName);
+
+                    String srcScp = scp;
+                    if (sourceName.startsWith("_")) {
+                        sourceName = sourceName.substring(1);
+                        srcScp = "global";
+                    }
+                    JunoVariable sourceVar = variables.get(srcScp).getRaw(sourceName);
+
                     if (sourceVar == null) {
                         System.out.println("Variable " + sourceName + " does not exist.");
                         break;
@@ -279,42 +292,10 @@ public class Interpreter {
                 case "unsafe":
                     isUnsafe = true;
                     break;
-                case "if":
-                    if (processedCmd.size() < 4) {
-                        System.out.println("Invalid if command: " + cmd);
-                        break;
-                    }
-                    // info: all values are treated as floats "for now" (tm)
-                    Float val1 = Float.parseFloat(processedCmd.get(1).get().toString());
-                    Float val2 = Float.parseFloat(processedCmd.get(3).get().toString());
-                    String op = processedCmd.get(2).get().toString();
-                    boolean result = false;
-                    ArrayList<Boolean> results = new ArrayList<>();
-                    boolean invertResult = false;
-
-                    for (String operationSymbol : op.split("")) {
-                        switch (operationSymbol) {
-                            case "=":
-                                results.add(val1.equals(val2));
-                                break;
-                            case ">":
-                                results.add(val1 > val2);
-                                break;
-                            case "<":
-                                results.add(val1 < val2);
-                                break;
-                            case "!":
-                                invertResult = true;
-                                break;
-                            default:
-                                System.out.println("Unknown operation symbol: " + operationSymbol);
-                                break;
-                        }
-                    }
-
-                    result = results.contains(true);
-                    result = invertResult ^ result; // same as invertResult != result, but i just WANT to use the XOR operator, sorry not sorry
-                    if (!result) {
+                case "if:i":
+                case "if:f":
+                case "if:s":
+                    if (!doIf(processedCmd, cmd)) {
                         prevMode = this.mode;
                         this.mode = InterpreterMode.IGNORE_IF;
                     }
@@ -351,5 +332,18 @@ public class Interpreter {
             }
         }
         // System.out.println(this.calls);
+    }
+
+    private boolean doIf(List<JunoVariable> processedCmd, String cmd) {
+        if (processedCmd.size() < 4) {
+            System.out.println("Invalid if command: " + cmd);
+            return true; // has same effect as if the command was not recognized in switch case and break was called
+        }
+
+        // if a op b
+        return Util.performIf(Util.convertParamToType(processedCmd.get(0).get().toString(), processedCmd.get(1))._1(), // a
+                Util.convertParamToType(processedCmd.get(0).get().toString(), processedCmd.get(3))._1(), // b
+                processedCmd.get(2).get().toString() // op
+        );
     }
 }

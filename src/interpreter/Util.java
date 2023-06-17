@@ -48,7 +48,7 @@ public class Util {
                         isNextVar = false;
 
                         if (!interpreter.variables.get(scopes[i]).has(part)) {
-                            output.add(new JunoVariable(indicator[i] + part, "s"));
+                            output.add(new JunoVariable(part, "s"));
                             continue;
                         }
 
@@ -130,5 +130,106 @@ public class Util {
             System.out.println("could not read file: " + path);
         }
         return output.toArray(new String[0]);
+    }
+
+    public static boolean performIf(JunoVariable val1, JunoVariable val2, String operator) {
+        switch (val1.getType()) {
+            case "i":
+                return intIf(val1, val2, operator);
+            case "f":
+                return floatIf(val1, val2, operator);
+            case "s":
+                return stringIf(val1, val2, operator);
+            default:
+                System.out.println("unknown type: " + val1.getType());
+                return false;
+        }
+    }
+
+    private static boolean intIf(JunoVariable val1, JunoVariable val2, String operator) {
+        ArrayList<Boolean> results = new ArrayList<>();
+        boolean result = false;
+        boolean isInverted = false;
+
+        for (String operationSymbol : operator.split("")) {
+            switch (operationSymbol) {
+                case "!":
+                    isInverted = !isInverted;
+                    break;
+                case "=":
+                    results.add(val1.get().equals(val2.get()));
+                    break;
+                case ">":
+                    results.add((int) val1.get() > (int) val2.get());
+                    break;
+                case "<":
+                    results.add((int) val1.get() < (int) val2.get());
+                    break;
+                default:
+                    System.out.println("unknown operator: " + operationSymbol);
+                    return false;
+            }
+        }
+
+        result = results.contains(true);
+        return isInverted != result;
+    }
+
+    private static boolean floatIf(JunoVariable val1, JunoVariable val2, String operator) {
+        ArrayList<Boolean> results = new ArrayList<>();
+        boolean result = false;
+        boolean isInverted = false;
+
+        for (String operationSymbol : operator.split("")) {
+            switch (operationSymbol) {
+                case "!":
+                    isInverted = !isInverted;
+                    break;
+                case "=":
+                    results.add(val1.get().equals(val2.get()));
+                    break;
+                case ">":
+                    results.add((float) val1.get() > (float) val2.get());
+                    break;
+                case "<":
+                    results.add((float) val1.get() < (float) val2.get());
+                    break;
+                default:
+                    System.out.println("unknown operator: " + operationSymbol);
+                    return false;
+            }
+        }
+
+        result = results.contains(true);
+        return isInverted != result;
+    }
+
+    private static boolean stringIf(JunoVariable val1, JunoVariable val2, String operator) {
+        ArrayList<Boolean> results = new ArrayList<>();
+        boolean result = false;
+        boolean isInverted = false;
+
+        for (String operationSymbol : operator.split("")) {
+            switch (operationSymbol) {
+                case "!":
+                    isInverted = !isInverted;
+                    break;
+                case "=":
+                    results.add(val1.get().equals(val2.get()));
+                    break;
+                case ">":
+                    results.add(((String) val1.get()).length() > ((String) val2.get()).length());
+                    break;
+                case "<":
+                    results.add(((String) val1.get()).length() < ((String) val2.get()).length());
+                    break;
+                default:
+                    System.out.println("unknown operator: " + operationSymbol);
+                    return false;
+            }
+        }
+
+        result = results.contains(true);
+        return isInverted != result;
     }
 }

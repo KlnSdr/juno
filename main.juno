@@ -1,4 +1,5 @@
 ld lib.juno
+ld std.juno
 
 dec sayHello > name:s
     out "Hello, " &name
@@ -10,7 +11,7 @@ set i i 0
 loop
     out &i
     add i &i 1
-    if &i > 10
+    if:i &i > 10
         break
     fi
 pool
@@ -34,3 +35,15 @@ out &b # 16
 set c i 16
 shr c &c 2
 out &c # 4
+
+set d s "Hello Scope"
+!cp d test msg
+
+scp test
+out &msg
+
+if:s a < aa
+    out "hell yeah"
+fi
+!isdef msg existsD
+out &existsD
