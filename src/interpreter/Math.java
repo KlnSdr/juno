@@ -33,7 +33,7 @@ public class Math {
 
             saveResultToVar(cmd, scp, interpreter, Float.toString(acc), "f");
         } else {
-            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i or f.");
+            System.out.println("Invalid type for mlt command: " + cmd.get(1).getType() + ". Expected i or f.");
         }
     }
 
@@ -59,7 +59,7 @@ public class Math {
 
             saveResultToVar(cmd, scp, interpreter, Float.toString(acc), "f");
         } else {
-            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i or f.");
+            System.out.println("Invalid type for div command: " + cmd.get(1).getType() + ". Expected i or f.");
         }
     }
 
@@ -85,7 +85,7 @@ public class Math {
 
             saveResultToVar(cmd, scp, interpreter, Float.toString(acc), "f");
         } else {
-            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i or f.");
+            System.out.println("Invalid type for mod command: " + cmd.get(1).getType() + ". Expected i or f.");
         }
     }
 
@@ -101,7 +101,7 @@ public class Math {
 
             saveResultToVar(cmd, scp, interpreter, Integer.toString(acc), "i");
         } else {
-            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i.");
+            System.out.println("Invalid type for shl command: " + cmd.get(1).getType() + ". Expected i.");
         }
     }
 
@@ -117,7 +117,7 @@ public class Math {
 
             saveResultToVar(cmd, scp, interpreter, Integer.toString(acc), "i");
         } else {
-            System.out.println("Invalid type for add command: " + cmd.get(1).getType() + ". Expected i.");
+            System.out.println("Invalid type for shr command: " + cmd.get(1).getType() + ". Expected i.");
         }
     }
 

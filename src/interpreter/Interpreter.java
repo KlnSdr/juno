@@ -133,7 +133,6 @@ public class Interpreter {
                         saveScp = "global";
                     }
 
-                    System.out.println("Setting " + processedCmd.get(1).get() + "(" + processedCmd.get(2).get() + ")" + " to " + processedCmd.get(3).get());
                     variables.get(saveScp).add((String) processedCmd.get(1).get(), (String) processedCmd.get(3).get(), ((String) processedCmd.get(2).get()).toLowerCase());
                     break;
                 case "out":
@@ -150,7 +149,7 @@ public class Interpreter {
                     break;
                 case "sub":
                     if (processedCmd.size() < 4) {
-                        System.out.println("Invalid add command: " + cmd);
+                        System.out.println("Invalid sub command: " + cmd);
                         break;
                     }
                     Math.subtract(processedCmd, scp, this);
@@ -242,7 +241,6 @@ public class Interpreter {
                     JunoVariable sourceVar = variables.get(srcScp).getRaw(sourceName);
 
                     if (sourceVar == null) {
-                        System.out.println("Variable " + sourceName + " does not exist.");
                         break;
                     }
                     String scpToMir = scp;
