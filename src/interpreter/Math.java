@@ -11,7 +11,7 @@ public class Math {
         addWithFactor(cmd, scp, interpreter, -1);
     }
 
-    public static void multiply(List<JunoVariable> cmd , String scp, Interpreter interpreter) {
+    public static void multiply(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
         if (cmd.get(2).getType().equals("i")) {
             int acc = (Integer) cmd.get(2).get();
             for (int i = 3; i < cmd.size(); i++) {
@@ -118,6 +118,24 @@ public class Math {
             saveResultToVar(cmd, scp, interpreter, Integer.toString(acc), "i");
         } else {
             System.out.println("Invalid type for shr command: " + cmd.get(1).getType() + ". Expected i.");
+        }
+    }
+
+    public static void leastSignificantBit(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
+        if (cmd.get(2).getType().equals("i")) {
+            int lsb = (Integer) cmd.get(2).get() & 1;
+            saveResultToVar(cmd, scp, interpreter, Integer.toString(lsb), "i");
+        } else {
+            System.out.println("Invalid type for lsb command: " + cmd.get(1).getType() + ". Expected i.");
+        }
+    }
+
+    public static void mostSignificantBit(List<JunoVariable> cmd, String scp, Interpreter interpreter) {
+        if (cmd.get(2).getType().equals("i")) {
+            int msb = ((Integer) cmd.get(2).get() >> 31) & 1;
+            saveResultToVar(cmd, scp, interpreter, Integer.toString(msb), "i");
+        } else {
+            System.out.println("Invalid type for msb command: " + cmd.get(1).getType() + ". Expected i.");
         }
     }
 

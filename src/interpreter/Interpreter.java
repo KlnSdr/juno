@@ -189,6 +189,20 @@ public class Interpreter {
                     }
                     Math.shiftRight(processedCmd, scp, this);
                     break;
+                case "lsb":
+                    if (processedCmd.size() != 3) {
+                        System.out.println("Invalid lsb command: " + cmd);
+                        break;
+                    }
+                    Math.leastSignificantBit(processedCmd, scp, this);
+                    break;
+                case "msb":
+                    if (processedCmd.size() != 3) {
+                        System.out.println("Invalid msb command: " + cmd);
+                        break;
+                    }
+                    Math.mostSignificantBit(processedCmd, scp, this);
+                    break;
                 case "scp":
                     if (processedCmd.size() != 2) {
                         System.out.println("Invalid scp command: " + cmd);

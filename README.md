@@ -1,5 +1,5 @@
 # juno
-a simple script "language" with 25 instructions
+a simple script "language" with 27 instructions
 - [keywords](#keywords)
 - [notes](#notes)
   - [variables and scopes](#variables-and-scopes)
@@ -35,6 +35,8 @@ a simple script "language" with 25 instructions
 | mod     | varSave, val1, ..., valN           | calculates the modulo of all values and saves them in *varSave*                                                                 |
 | shl     | varSave, val1, ..., valN           | shifts all values to the left and saves them in *varSave*                                                                       |
 | shr     | varSave, val1, ..., valN           | shifts all values to the right and saves them in *varSave*                                                                      |
+| lsb     | varSave val                        | saves the least significant bit of *val* in *varSave*                                                                           |
+| msb     | varSave, val1                      | saves the most significant bit of *val* in *varSave*                                                                            |
 | con     | varSave, val1, ..., valN           | concatenates all values and saves them in *varSave*                                                                             |
 | scp     | scopeName                          | changes the current scope to *scopeName*, if it doesn't exist it is created                                                     |
 | dscp    | scopeName                          | deletes the scope *scopeName*                                                                                                   |
