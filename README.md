@@ -95,6 +95,8 @@ a simple script "language" with 25 instructions
 - to check if two strings have the same length use `<!>` or some other combination
 - else statements are not supported
 - in loops the if statement can be used to check if the loop should be exited or not
+### strings
+- only strings containing spaces have to be put in quotes (`"`)
 
 ## examples
 ### hello world
