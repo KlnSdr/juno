@@ -180,6 +180,6 @@ set b i 10
 ```
 unsafe
 loop
-  out &"Hello World!"
+  out "to infinity and beyond"
 pool
 ```
