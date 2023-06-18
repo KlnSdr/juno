@@ -104,7 +104,7 @@ a simple script "language" with 27 instructions
 ### hello world
 ```
 set msg s "Hello World!"
-out &hello
+out &msg
 ```
 ### add to numbers
 ```
