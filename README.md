@@ -12,6 +12,8 @@ a simple script "language" with 27 instructions
   - [unsafe mode](#unsafe-mode)
   - [comments](#comments)
   - [if statement](#if-statement)
+  - [strings](#strings)
+  - [loops](#loops)
 - [examples](#examples)
   - [hello world](#hello-world)
   - [add to numbers](#add-to-numbers)
@@ -20,6 +22,8 @@ a simple script "language" with 27 instructions
     - [float](#float)
     - [string](#string)
   - [loop](#loop)
+    - [check after](#check-after)
+    - [check before](#check-before)
   - [function](#function)
   - [packages](#packages)
   - [unsafe mode](#unsafe-mode)
@@ -55,7 +59,7 @@ to run a script type `java -jar path/to/juno.jar [options]` into your terminal
 | ld      | fileName                           | runs *fileName* as a script. used to import function from packages                                                              |
 | loop    |                                    | starts a loop (currently loops inside loops are not supported)                                                                  |
 | pool    |                                    | end of the loop definition                                                                                                      |
-| break   |                                    | exit the current loop                                                                                                           |
+| break   |                                    | exit the current loop after the current iteration has finished                                                                  |
 | dec     | functionName > param1, ..., paramN | defines a new function with the given name and parameters. each parameter name has to be succeeded by a type (`:s`, `:i`, `:f`) |
 | dn      |                                    | end of function definition                                                                                                      |
 | !       | functionName, param1, ..., paramN  | calls the function with the given name and parameters                                                                           |
@@ -109,6 +113,10 @@ to run a script type `java -jar path/to/juno.jar [options]` into your terminal
 - in loops the if statement can be used to check if the loop should be exited or not
 ### strings
 - only strings containing spaces have to be put in quotes (`"`)
+### loops
+- the break keyword only signals that the loop should be aborted **after** the current iteration
+- to exit the loop immediately use `break` in conjunction with `end`
+  - this works because loop is treated as a function call internally
 
 ## examples
 ### hello world
@@ -154,6 +162,7 @@ if:s a < b
 fi
 ```
 ### loop
+#### check after
 ```
 set a i 0
 loop
@@ -162,6 +171,18 @@ loop
   if:i a = 10
     break
   fi
+pool
+```
+#### check before
+```
+set a i 0
+loop
+  if:i &a = 10
+    break
+    end
+  fi
+  out &a
+  add a &a i
 pool
 ```
 ### function
