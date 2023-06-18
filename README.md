@@ -80,6 +80,9 @@ to run a script type `java -jar path/to/juno.jar [options]` into your terminal
 - `s` for string
 - there are currently no other types like boolean
 - arrays can be added using the [array.juno](https://github.com/KlnSdr/juno-packages/tree/main/array) package
+- `i` and `f` are represented using javas `int` and `float` type
+  - range of `i`: -2.147.483.648 to 2.147.483.647
+  - range of `f`: 1.40239846e-45f to 3.40282347e+38f
 ### functions
 - currently functions inside functions are not supported
 - anonymous functions are not supported
