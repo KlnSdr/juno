@@ -101,7 +101,7 @@ to run a script type `java -jar path/to/juno.jar [options]` into your terminal
 - :warning: unsafe mode removes the protection from infinite loops
 ### comments
 - comments start with `#` and end with a newline
-- the `#` can be escaped using `\` -> this eliminates the usage of `#` in strings (sorry)
+- the `#` can't be escaped using `\` -> this eliminates the usage of `#` in strings (sorry)
 ### if statement
 - the if statement is typed like a function parameter
 - the if statement can be used with the types `i`, `f` and `s`
