@@ -57,7 +57,7 @@ to run a script type `java -jar path/to/juno.jar [options]` into your terminal
 | end     |                                    | ends the program                                                                                                                |
 | unsafe  |                                    | enables unsafe mode                                                                                                             |
 | ld      | fileName                           | runs *fileName* as a script. used to import function from packages                                                              |
-| loop    |                                    | starts a loop (currently loops inside loops are not supported)                                                                  |
+| loop    |                                    | starts a loop (nested loops are supported as of v1.1.1)                                                                         |
 | pool    |                                    | end of the loop definition                                                                                                      |
 | break   |                                    | exit the current loop after the current iteration has finished                                                                  |
 | dec     | functionName > param1, ..., paramN | defines a new function with the given name and parameters. each parameter name has to be succeeded by a type (`:s`, `:i`, `:f`) |

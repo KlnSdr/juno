@@ -42,10 +42,10 @@ public class Interpreter {
         run(Util.readFile(path));
     }
 
-    private void runFunction(String functionName) {
+    private boolean runFunction(String functionName) {
         if (!functions.containsKey(functionName)) {
             System.out.println("Function " + functionName + " does not exist.");
-            return;
+            return false;
         }
 
         ArrayList<String> instructionBuffer = new ArrayList<>();
@@ -78,12 +78,15 @@ public class Interpreter {
                 continue;
             } else if (mode == InterpreterMode.RECORD_LOOP) {
                 if (cmd.equalsIgnoreCase("pool")) {
-                    this.functions.put("loop", new JunoFunction(new String[0], instructionBuffer.toArray(new String[0])));
                     this.mode = InterpreterMode.LOOP;
-                    while (this.mode == InterpreterMode.LOOP && this.calls <= this.maxCalls) {
-                        runFunction("loop");
+                    String loopName = "loop";
+                    while (this.functions.containsKey(loopName)) {
+                        loopName += "_";
                     }
-                    this.functions.remove("loop");
+                    this.functions.put(loopName, new JunoFunction(new String[0], instructionBuffer.toArray(new String[0])));
+
+                    while (runFunction(loopName) && this.calls <= this.maxCalls) {}
+                    this.functions.remove(loopName);
                     continue;
                 }
                 instructionBuffer.add(cmd);
@@ -300,7 +303,7 @@ public class Interpreter {
                     }
                     break;
                 case "end":
-                    return;
+                    return false;
                 case "unsafe":
                     isUnsafe = true;
                     break;
@@ -317,7 +320,7 @@ public class Interpreter {
                     break;
                 case "break":
                     this.mode = InterpreterMode.NORMAL;
-                    break;
+                    return false;
                 case "loop":
                     prevMode = this.mode;
                     this.mode = InterpreterMode.RECORD_LOOP;
@@ -340,10 +343,10 @@ public class Interpreter {
             }
             if (this.calls > this.maxCalls) {
                 System.out.println("Program exceeded maximum number of calls (" + this.maxCalls + ").");
-                return;
+                return false;
             }
         }
-        // System.out.println(this.calls);
+        return true;
     }
 
     private boolean doIf(List<JunoVariable> processedCmd, String cmd) {
