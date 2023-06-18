@@ -116,10 +116,6 @@ to run a script type `java -jar path/to/juno.jar [options]` into your terminal
 - in loops the if statement can be used to check if the loop should be exited or not
 ### strings
 - only strings containing spaces have to be put in quotes (`"`)
-### loops
-- the break keyword only signals that the loop should be aborted **after** the current iteration
-- to exit the loop immediately use `break` in conjunction with `end`
-  - this works because loop is treated as a function call internally
 
 ## examples
 ### hello world
