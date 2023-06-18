@@ -1,5 +1,8 @@
 # juno
 a simple script "language" with 27 instructions
+## table of contents
+- [usage](#usage)
+  - [options](#options)
 - [keywords](#keywords)
 - [notes](#notes)
   - [variables and scopes](#variables-and-scopes)
@@ -21,7 +24,13 @@ a simple script "language" with 27 instructions
   - [packages](#packages)
   - [unsafe mode](#unsafe-mode)
   - [scopes](#scopes)
-
+## usage
+to run a script type `java -jar path/to/juno.jar [options]` into your terminal
+### options
+| option     | description                                                                                     |
+|------------|-------------------------------------------------------------------------------------------------|
+| -f/--file  | the path to the script you want to run                                                          |
+| -c/--calls | the maximum number of instructions that can be executed before the interpreter stops the script |
 ## keywords
 | keyword | parameters                         | description                                                                                                                     |
 |---------|------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
