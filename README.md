@@ -128,7 +128,7 @@ out &msg
 ```
 set a i 5
 set b i 10
-add c a b
+add c &a &b
 out &c # 15
 ```
 ### if statement
@@ -136,7 +136,7 @@ out &c # 15
 ```
 set a i 5
 set b i 10
-if:i a < b
+if:i &a < &b
   out &a
 fi
 ```
@@ -144,7 +144,7 @@ fi
 ```
 set a f 5.5
 set b f 10.5
-if:f a < b
+if:f &a < &b
   out &a
 fi
 ```
@@ -153,11 +153,11 @@ the string version of if compares the length of the strings. equality is tested 
 ```
 set a s "Hello"
 set b s "World"
-if:s a = b
+if:s &a = &b
   out "a and b are the same"
 fi
 
-if:s a < b
+if:s &a < &b
   out "a is shorter than b"
 fi
 ```
@@ -166,9 +166,9 @@ fi
 ```
 set a i 0
 loop
-  add a a 1
+  add a &a 1
   out &a
-  if:i a = 10
+  if:i &a = 10
     break
   fi
 pool
@@ -188,19 +188,19 @@ pool
 ### function
 ```
 dec add > a:i b:i
-  add c a b
+  add c &a &b
   out &c
 dn
 
 set a i 5
 set b i 10
-!add a b
+!add &a &b
 ```
 ### packages
 #### package.juno
 ```
 dec add > a:i b:i
-  add c a b
+  add c &a &b
   out &c
 dn
 ```
@@ -209,7 +209,7 @@ dn
 ld package.juno
 set a i 5
 set b i 10
-!add a b
+!add &a &b
 ```
 ### unsafe mode
 ```
