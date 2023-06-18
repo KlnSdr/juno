@@ -20,6 +20,7 @@ a simple script "language" with 27 instructions
   - [function](#function)
   - [packages](#packages)
   - [unsafe mode](#unsafe-mode)
+  - [scopes](#scopes)
 
 ## keywords
 | keyword | parameters                         | description                                                                                                                     |
@@ -186,4 +187,23 @@ unsafe
 loop
   out "to infinity and beyond"
 pool
+```
+### scopes
+#### local scopes
+```
+scp main
+set msg s "Hello World!"
+out &msg # Hello World!
+
+scp sub # change scope from main to sub 
+out &msg # msg -> msg is not defined in sub
+```
+#### global scope
+```
+scp main
+set _msg s "Hello World!" # set global var msg
+out *msg # Hello World!
+
+scp sub # change scope from main to sub 
+out *msg # Hello World!
 ```
